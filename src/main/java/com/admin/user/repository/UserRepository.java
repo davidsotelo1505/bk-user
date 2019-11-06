@@ -13,6 +13,7 @@ import com.admin.user.model.User;
 public interface UserRepository extends JpaRepository<User, Long>	{
 	User findByUsername(String username);
 	User findByUsernameAndPassword(String username, String password);
+	User getFindById(Long id);
 	
 	@Query(value = "Select u from User u "
 			+ "where UPPER(u.username) LIKE UPPER(CONCAT('%', :filter, '%')) "

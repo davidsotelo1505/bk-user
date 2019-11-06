@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 @Entity
 @Table(name = "SAA_ROLE")
@@ -21,9 +23,8 @@ public class Role implements Serializable{
 	private static final long serialVersionUID = -8667577631782886458L;
 	
 	@Id
-	@Column(name = "id", unique = true, nullable = false)
-	@SequenceGenerator(name = "role_seq", sequenceName = "role_seq", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="native")
+	@GenericGenerator(name="native",strategy="native")
 	private Long id;
 	
 	@Column

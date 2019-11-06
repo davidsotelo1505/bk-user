@@ -8,7 +8,7 @@ import com.admin.user.model.User;
 
 public interface UserService {
 	
-	User save(User user) throws ServiceException;
+	String save(User user) throws ServiceException;
 	
 	List<User> findAll() throws ServiceException;
 	
@@ -18,7 +18,7 @@ public interface UserService {
 	
 	User findByUsername(String username) throws ServiceException;
 	
-	User findById(Long id) throws ServiceException;
+	User getfindById(Long id) throws ServiceException;
 	
 	User updatePassword(User user) throws ServiceException;
 	
