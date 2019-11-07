@@ -43,6 +43,7 @@ public class User implements Serializable {
 	@Column
 	private String username;
 	@Column
+	@JsonIgnore
 	private String password;
 	@Column
 	@CreationTimestamp
