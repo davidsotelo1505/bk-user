@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.admin.security.LoginUserDto;
 import com.admin.user.model.User;
 import com.admin.user.service.UserService;
 
@@ -30,6 +32,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@ApiOperation(value = "Registrar un Usuario en la platafroma Universidad Libre. Sin Rol Especifico", response = ResponseEntity.class)
 	@RequestMapping(method = RequestMethod.POST)
@@ -69,6 +74,26 @@ public class UserController {
 		HttpStatus status = HttpStatus.OK;
 		User userUpdate = userService.update(user);
 		return new ResponseEntity<User>(userUpdate, status);
+	}
+	
+
+	@ApiOperation(value = "Generar token de accesso a la plataforma Virgin Mobile. Sin Rol Especifico", response = ResponseEntity.class)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<String> loginUser(@RequestBody LoginUserDto loginUser){
+		
+		try {
+			validateUsername(loginUser.getUsername());
+			validatePassword(loginUser.getPassword());
+			HttpStatus status = HttpStatus.OK;
+			return new ResponseEntity<String>(userService.login(loginUser), status);
+		} catch (Exception e) {
+
+			HttpStatus status = HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<String>(e.getMessage(), status);
+
+		}
+		
+
 	}
 
 	public void validateUsername(String username) throws ServiceException {

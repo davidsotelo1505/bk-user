@@ -11,26 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.admin.security.LoginUserDto;
 import com.admin.user.model.User;
 import com.admin.user.repository.RoleRepository;
 import com.admin.user.repository.StateRepository;
 import com.admin.user.repository.UserRepository;
-
-
-
-
+import com.sun.xml.bind.v2.runtime.output.Encoded;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
 	final Logger log = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	 
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -43,25 +40,24 @@ public class UserServiceImpl implements UserService {
 		log.info("  >>>>>> On save user \n" + user.toString());
 		User userFind = userRepository.findByUsername(user.getUsername());
 		try {
-			if (null ==  userFind) {	
-			user.setPassword(passwordEncoder.encode(user.getPassword()));	
-			userRepository.save(user);
-			return "usuario guardado correcatmente";
+			if (null == userFind) {
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+				userRepository.save(user);
+				return "usuario guardado correcatmente";
 			} else {
 				throw new ServiceException("El usuario ya existe");
 			}
 
 		} catch (Exception e) {
 			log.info("El ususario ya existe");
-			if(e instanceof ServiceException) {
+			if (e instanceof ServiceException) {
 				throw e;
-			}else {
+			} else {
 				throw new ServiceException("ocurrio un error al guardar");
 			}
 		}
-		
-	}
 
+	}
 
 	@Override
 	public List<User> findAll() throws ServiceException {
@@ -86,21 +82,17 @@ public class UserServiceImpl implements UserService {
 
 		return flag;
 	}
-	
-	
 
 	@Override
 	public User update(User user) throws ServiceException {
 		log.info("  >>>>>> Update User " + user);
 		User findToUpdate = userRepository.getFindById(user.getId());
-		
+
 		findToUpdate.setIdentificationNumber(user.getIdentificationNumber());
 		findToUpdate.setNames(user.getNames());
 		findToUpdate.setUsername(user.getUsername());
 		findToUpdate.setRoles(user.getRoles());
-		
-		
-		
+
 		return userRepository.save(findToUpdate);
 	}
 
@@ -112,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getfindById(Long id) throws ServiceException {
-	
+
 		return userRepository.findById(id).orElseThrow(() -> new ServiceException("User does not exist"));
 	}
 
@@ -122,4 +114,23 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	@Override
+	public String login(LoginUserDto loginUser) throws ServiceException {
+		User user = userRepository.findByUsername(loginUser.getUsername());
+		try {
+			if (null == user) {
+				return "Usuario no ecnotnrado";
+			} else {
+				if (passwordEncoder.matches(loginUser.getPassword(), user.getPassword()) == true) {
+					return "usuario logeado correctamente";
+				}else {
+					return "COntraseña incorrecta";
+				}
+			}
+		} catch (Exception e) {
+			return "Por favor verificar datos y volver a intentar";
+		}
+		
+
+	}
 }

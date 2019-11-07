@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.service.spi.ServiceException;
 
+import com.admin.security.LoginUserDto;
 import com.admin.user.model.User;
 
 public interface UserService {
@@ -21,6 +22,10 @@ public interface UserService {
 	User getfindById(Long id) throws ServiceException;
 	
 	User updatePassword(User user) throws ServiceException;
+	
+	String login(LoginUserDto loginUser) throws ServiceException;
+	
+
 	
 	
 }
