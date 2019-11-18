@@ -16,6 +16,7 @@ import com.admin.user.model.User;
 import com.admin.user.repository.RoleRepository;
 import com.admin.user.repository.StateRepository;
 import com.admin.user.repository.UserRepository;
+import com.admin.util.GeneralResponse;
 import com.sun.xml.bind.v2.runtime.output.Encoded;
 
 @Service(value = "userService")
@@ -36,14 +37,15 @@ public class UserServiceImpl implements UserService {
 	private StateRepository stateRepository;
 
 	@Override
-	public String save(User user) throws ServiceException {
+	public User save(User user) throws ServiceException {
 		log.info("  >>>>>> On save user \n" + user.toString());
 		User userFind = userRepository.findByUsername(user.getUsername());
+		
 		try {
 			if (null == userFind) {
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				userRepository.save(user);
-				return "usuario guardado correcatmente";
+				return user;
 			} else {
 				throw new ServiceException("El usuario ya existe");
 			}
@@ -124,7 +126,7 @@ public class UserServiceImpl implements UserService {
 				if (passwordEncoder.matches(loginUser.getPassword(), user.getPassword()) == true) {
 					return "usuario logeado correctamente";
 				}else {
-					return "COntraseña incorrecta";
+					return "Contraseña incorrecta";
 				}
 			}
 		} catch (Exception e) {

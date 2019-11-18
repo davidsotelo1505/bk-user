@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.admin.security.LoginUserDto;
 import com.admin.user.model.User;
 import com.admin.user.service.UserService;
+import com.admin.util.GeneralResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,29 +40,41 @@ public class UserController {
 
 	@ApiOperation(value = "Registrar un Usuario en la platafroma Universidad Libre. Sin Rol Especifico", response = ResponseEntity.class)
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody User user) {
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<GeneralResponse<User>> saveUser(@RequestBody User user) {
+		GeneralResponse<User> response = new GeneralResponse<>();
+		HttpStatus status = HttpStatus.OK;
 		try {
+			
 			validateUsername(user.getUsername());
 			validatePassword(user.getPassword());
-			HttpStatus status = HttpStatus.OK;
-			return new ResponseEntity<String>(userService.save(user), status);
+			User userSaved = userService.save(user);
+			//response.setData(userSaved);
+			response.setSuccess(true);
+			response.setMessage("Usuario guardado exitosamente");
+			status = HttpStatus.OK;
+	
 		} catch (Exception e) {
 
-			HttpStatus status = HttpStatus.BAD_REQUEST;
-			return new ResponseEntity<String>(e.getMessage(), status);
+			status = HttpStatus.BAD_REQUEST;
+			response.setSuccess(false);
+			response.setMessage("usuario ya existe");
+			
 
-		}
+		}return new ResponseEntity<GeneralResponse<User>>(response, status);
 
 	}
 
 	@ApiOperation(value = "Mostrtar los Usuarios en la platafroma Universidad Libre. Sin Rol Especifico", response = ResponseEntity.class)
 	@RequestMapping(method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
 	public List<User> getUserList() {
 		return userService.findAll();
 	}
 
 	@ApiOperation(value = "BUscar por id el usuario en la platafroma Universidad Libre. Sin Rol Especifico", response = ResponseEntity.class)
 	@RequestMapping(value = "/{id}",method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<User> getUserById(@PathVariable(name = "id")Long id) {
 		User user =userService.getfindById(id);
 		HttpStatus status = HttpStatus.OK;
@@ -69,27 +83,36 @@ public class UserController {
 	
 	@ApiOperation(value = "Registrar un Usuario en la platafroma Universidad Libre. Sin Rol Especifico", response = ResponseEntity.class)
 	@RequestMapping(method = RequestMethod.PUT)
-	public ResponseEntity<User> updateUser(@RequestBody User user){
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<GeneralResponse<User>> updateUser(@RequestBody User user){
+		GeneralResponse<User> response = new GeneralResponse<>();
 		log.info(" Init updateUser");
-		HttpStatus status = HttpStatus.OK;
+		
 		User userUpdate = userService.update(user);
-		return new ResponseEntity<User>(userUpdate, status);
+		response.setSuccess(true);
+		response.setMessage("Usuario actualizado exitosamente");
+		HttpStatus status = HttpStatus.OK;
+		return new ResponseEntity<GeneralResponse<User>>(response, status);
 	}
 	
 
 	@ApiOperation(value = "Generar token de accesso a la plataforma Virgin Mobile. Sin Rol Especifico", response = ResponseEntity.class)
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> loginUser(@RequestBody LoginUserDto loginUser){
-		
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<GeneralResponse<User>> loginUser(@RequestBody LoginUserDto loginUser){
+		GeneralResponse<User> response = new GeneralResponse<>();
 		try {
 			validateUsername(loginUser.getUsername());
 			validatePassword(loginUser.getPassword());
+			response.setMessage(userService.login(loginUser));
+			response.setSuccess(true);
 			HttpStatus status = HttpStatus.OK;
-			return new ResponseEntity<String>(userService.login(loginUser), status);
+			return new ResponseEntity<GeneralResponse<User>>(response, status);
 		} catch (Exception e) {
-
+			response.setSuccess(false);
+			response.setMessage(e.getMessage());
 			HttpStatus status = HttpStatus.BAD_REQUEST;
-			return new ResponseEntity<String>(e.getMessage(), status);
+			return new ResponseEntity<GeneralResponse<User>>(response, status);
 
 		}
 		

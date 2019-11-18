@@ -9,7 +9,7 @@ import com.admin.user.model.User;
 
 public interface UserService {
 	
-	String save(User user) throws ServiceException;
+	User save(User user) throws ServiceException;
 	
 	List<User> findAll() throws ServiceException;
 	
