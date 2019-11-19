@@ -24,6 +24,7 @@ public class GeneralResponse<T> implements Serializable {
 	 */
 	private String message;
 
+	private Long rol;
 
 	/**
 	 * Constructor
@@ -34,9 +35,10 @@ public class GeneralResponse<T> implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public GeneralResponse(boolean success, String message) {
+	public GeneralResponse(boolean success, String message, Long rol) {
 		this.success = success;
 		this.message = message;
+		this.rol=rol;
 	}
 
 	/**
@@ -71,8 +73,18 @@ public class GeneralResponse<T> implements Serializable {
 	 * 
 	 * @return the message value
 	 */
+	
+	
 	public String getMessage() {
 		return message;
+	}
+
+	public Long getRol() {
+		return rol;
+	}
+
+	public void setRol(Long rol) {
+		this.rol = rol;
 	}
 
 	/**

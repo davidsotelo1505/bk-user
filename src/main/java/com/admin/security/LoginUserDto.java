@@ -4,6 +4,16 @@ public class LoginUserDto {
 
 	private String username;
 	private String password;
+	private Long rol;
+	
+
+	public Long getRol() {
+		return rol;
+	}
+
+	public void setRol(Long rol) {
+		this.rol = rol;
+	}
 
 	public LoginUserDto() {
 

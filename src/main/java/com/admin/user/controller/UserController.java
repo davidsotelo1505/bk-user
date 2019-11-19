@@ -52,6 +52,7 @@ public class UserController {
 			//response.setData(userSaved);
 			response.setSuccess(true);
 			response.setMessage("Usuario guardado exitosamente");
+			response.setRol(user.getRol());
 			status = HttpStatus.OK;
 	
 		} catch (Exception e) {
@@ -105,7 +106,9 @@ public class UserController {
 			validateUsername(loginUser.getUsername());
 			validatePassword(loginUser.getPassword());
 			response.setMessage(userService.login(loginUser));
+			User user = userService.findByUsername(loginUser.getUsername());
 			response.setSuccess(true);
+			response.setRol(user.getRol());
 			HttpStatus status = HttpStatus.OK;
 			return new ResponseEntity<GeneralResponse<User>>(response, status);
 		} catch (Exception e) {

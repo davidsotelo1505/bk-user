@@ -93,7 +93,6 @@ public class UserServiceImpl implements UserService {
 		findToUpdate.setIdentificationNumber(user.getIdentificationNumber());
 		findToUpdate.setNames(user.getNames());
 		findToUpdate.setUsername(user.getUsername());
-		findToUpdate.setRoles(user.getRoles());
 
 		return userRepository.save(findToUpdate);
 	}
