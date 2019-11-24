@@ -50,6 +50,7 @@ public class UserController {
 			validatePassword(user.getPassword());
 			User userSaved = userService.save(user);
 			//response.setData(userSaved);
+			response.setUser_id(user.getId());
 			response.setSuccess(true);
 			response.setMessage("Usuario guardado exitosamente");
 			response.setRol(user.getRol());
@@ -107,6 +108,7 @@ public class UserController {
 			validatePassword(loginUser.getPassword());
 			response.setMessage(userService.login(loginUser));
 			User user = userService.findByUsername(loginUser.getUsername());
+			response.setUser_id(user.getId());
 			response.setSuccess(true);
 			response.setRol(user.getRol());
 			HttpStatus status = HttpStatus.OK;

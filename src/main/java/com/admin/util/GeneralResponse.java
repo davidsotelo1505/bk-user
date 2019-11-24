@@ -25,6 +25,8 @@ public class GeneralResponse<T> implements Serializable {
 	private String message;
 
 	private Long rol;
+	
+	private Long user_id;
 
 	/**
 	 * Constructor
@@ -35,10 +37,11 @@ public class GeneralResponse<T> implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public GeneralResponse(boolean success, String message, Long rol) {
+	public GeneralResponse(boolean success, String message, Long rol, Long user_id) {
 		this.success = success;
 		this.message = message;
 		this.rol=rol;
+		this.user_id=user_id;
 	}
 
 	/**
@@ -117,6 +120,14 @@ public class GeneralResponse<T> implements Serializable {
 	@Override
 	public String toString() {
 		return new com.google.gson.Gson().toJson(this);
+	}
+
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
 	}
 
 	
