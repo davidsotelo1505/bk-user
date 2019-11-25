@@ -115,7 +115,7 @@ public class UserController {
 			return new ResponseEntity<GeneralResponse<User>>(response, status);
 		} catch (Exception e) {
 			response.setSuccess(false);
-			response.setMessage(e.getMessage());
+			response.setMessage("Usuario no existe");
 			HttpStatus status = HttpStatus.BAD_REQUEST;
 			return new ResponseEntity<GeneralResponse<User>>(response, status);
 
